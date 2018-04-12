@@ -11,11 +11,13 @@
           </div>
           <div class="mraddress f30">默认地址</div>
           <div class="adrbtn edit fr" @click.stop="modifyAddress(address)">编辑</div>
-          <div class="adrbtn del fr">删除</div>
+          <div class="adrbtn del fr" @click.stop="removeAddress(address)">删除</div>
         </div>
       </li>
     </ul>
-    <button class="defaultconfirm">添加新地址</button>
+    <router-link :to="{ name: 'modifyAddress'}">
+      <button class="defaultconfirm">添加新地址</button>
+    </router-link>
   </div>
 </template>
 <script>
@@ -97,6 +99,26 @@ export default {
     checkAddress(addr) {
       this.$store.commit('setCheckAddress', addr)
       this.$router.push({name: this.from.name, query: this.from.query})
+    },
+    removeAddress(addr) {
+      this.$messagebox({
+        title: '提示',
+        message: '确定删除该地址吗?',
+        showCancelButton: true
+      }).then(action => {
+        if( action==='confirm' ) {
+          HomeApi.RemoveAddress({addressId: addr.addressId}).then(
+            res => {
+              console.log(res);
+              if (res.data.resultCode === 1) {
+                this.addressList = this.addressList.filter(a=> a.addressId != addr.addressId)
+              } else {
+                this.$toast(res.data.info)
+              }
+            }
+          )
+        }
+      })
     }
   }
 }

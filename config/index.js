@@ -12,23 +12,23 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       "/checkImage": {
-        target: "http://192.168.2.199",
+        target: "http://192.168.2.44:8080",
         changeOrigin: true,
       },
       "/wechat": {
-        target: "http://192.168.2.199",
+        target: "http://192.168.2.44:8080",
 				changeOrigin: true,
 			},
       "/upload": {
-        target: "http://192.168.2.199",
+        target: "http://192.168.2.44:8080",
         changeOrigin: true,
       },
       "/app": {
-        target: "http://192.168.2.199",
+        target: "http://192.168.2.44:8080",
         changeOrigin: true,
       },
       "/weixin": {
-        target: "http://192.168.2.199",
+        target: "http://192.168.2.44:8080",
         changeOrigin: true,
       },
     },

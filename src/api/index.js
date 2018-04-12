@@ -197,6 +197,18 @@ const HomeApi = {
   AddressList: function AddressList(params={}) {
     return vm.$http.get(vm.$CONSTANTS.APIWechat + '/member/addressmgr/addresslist', {params})
   },
+  // 删除收货地址
+  RemoveAddress: function RemoveAddress(params={}) {
+    return vm.$http({
+      url: vm.$CONSTANTS.APIWechat + '/member/addressmgr/removeaddress',
+      method: 'post',
+      data: params,
+      transformRequest: [TransFnc],
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    })
+  },
   // 微信支付接口
   WeixinPay: function WeixinPay(params={}) {
     return vm.$http({
@@ -281,6 +293,30 @@ const HomeApi = {
   Bookmarklist: function Bookmarklist(params) {
     return vm.$http({
       url: vm.$CONSTANTS.APIWechat + '/member/bookmark/bookmarklist',
+      method: 'post',
+      data: params,
+      transformRequest: [TransFnc],
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    })
+  },
+  // 修改密码
+  ModifyPassword: function ModifyPassword(params) {
+    return vm.$http({
+      url: vm.$CONSTANTS.APIWechat + '/member/userinfomgr/modifypasswd',
+      method: 'post',
+      data: params,
+      transformRequest: [TransFnc],
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    })
+  },
+  // 意见反馈
+  FeedBack: function FeedBack(params) {
+    return vm.$http({
+      url: vm.$CONSTANTS.APIWechat + '/member/leavewordsmgr/addleavewords',
       method: 'post',
       data: params,
       transformRequest: [TransFnc],

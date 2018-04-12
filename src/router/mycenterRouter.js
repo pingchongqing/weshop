@@ -38,10 +38,40 @@ const MyBookMark = resolve => {
         resolve(require('components/mycenter/MyBookmarkList.vue'));
     }, 'mycenter');
 };
+// 积分
+const Points = resolve => {
+    require.ensure([], () => {
+        resolve(require('components/mycenter/Points.vue'));
+    }, 'mycenter');
+};
 // 我的取货码
 const MyCode = resolve => {
     require.ensure([], () => {
         resolve(require('components/mycenter/MyCode.vue'));
+    }, 'mycenter');
+};
+// 设置
+const Setting = resolve => {
+    require.ensure([], () => {
+        resolve(require('components/mycenter/Setting.vue'));
+    }, 'mycenter');
+};
+// 修改密码
+const ModifyPassword = resolve => {
+    require.ensure([], () => {
+        resolve(require('components/mycenter/ModifyPassword.vue'));
+    }, 'mycenter');
+};
+// 关于我们
+const AboutUs = resolve => {
+    require.ensure([], () => {
+        resolve(require('components/mycenter/AboutUs.vue'));
+    }, 'mycenter');
+};
+// 信息反馈
+const FeedBack = resolve => {
+    require.ensure([], () => {
+        resolve(require('components/mycenter/FeedBack.vue'));
     }, 'mycenter');
 };
 
@@ -98,6 +128,41 @@ export default {
       path: 'mycode',
       components: {
         default: MyCode
+      }
+    },
+    {
+      name: 'setting',
+      path: 'setting',
+      components: {
+        default: Setting
+      }
+    },
+    {
+      name: 'aboutus',
+      path: 'setting/aboutus',
+      components: {
+        default: AboutUs
+      }
+    },
+    {
+      name: 'modifypassword',
+      path: 'setting/modifypassword',
+      components: {
+        default: ModifyPassword
+      }
+    },
+    {
+      name: 'feedback',
+      path: 'setting/feedback',
+      components: {
+        default: FeedBack
+      }
+    },
+    {
+      name: 'points',
+      path: 'points',
+      components: {
+        default: Points
       }
     },
   ]

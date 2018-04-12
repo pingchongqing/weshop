@@ -133,7 +133,7 @@ export default {
     // 取货
     getgoods(order) {
       this.popupVisible = !this.popupVisible
-      this.qrcodeOption.text = order.orderId
+      this.qrcodeOption.text = order.ladingCode
     }
   }
 }

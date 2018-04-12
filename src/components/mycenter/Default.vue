@@ -11,9 +11,11 @@
           <div class="score">积分: {{userinfo.integration}}</div>
         </div>
       </div>
-      <div class="setting">
-        <div>设置</div>
-      </div>
+      <router-link :to="{ name: 'setting' }">
+        <div class="setting">
+          <div>设置</div>
+        </div>
+      </router-link>
     </div>
     <!-- 我的订单 -->
     <div class="my-order bg-fff mt-20">
@@ -22,7 +24,7 @@
         <span class="color-666 fr">查看更多订单 ></span>
       </div>
       <ul class="ordercont clearfix py-30">
-        <li class="border-right" @click="nextPage(51)"><i class="getgoods"></i><div>取货码</div></li>
+        <li class="border-right" @click="nextPage(51)"><i class="getgoods"></i><div>取货码</div><div class="badge" v-show="orderNum.sjgGoodsCodeNum">{{orderNum.sjgGoodsCodeNum}}</div></li>
         <li @click="nextPage(2)"><i class="pay"></i><div>待付款</div><div class="badge" v-show="orderNum.pendingPayment">{{orderNum.pendingPayment}}</div></li>
         <li @click="nextPage(3)"><i class="l3"></i><div>待发货</div><div class="badge" v-show="orderNum.waitingDelivery">{{orderNum.waitingDelivery}}</div></li>
         <li @click="nextPage(5)"><i class="l4"></i><div>待评价</div><div class="badge" v-show="orderNum.waitingEvaluated">{{orderNum.waitingEvaluated}}</div></li>
@@ -36,7 +38,9 @@
         <span class="color-000 ">我的服务</span>
       </div>
       <ul class="servicecont clearfix py-30">
-        <li><i class="l1"></i><div>积分</div></li>
+        <router-link :to="{ name: 'points'}">
+          <li><i class="l1"></i><div>积分</div></li>
+        </router-link>
         <router-link :to="{ name: 'mycard'}">
           <li><i class="l2"></i><div>优惠券</div></li>
         </router-link>

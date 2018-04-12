@@ -82,7 +82,7 @@
         let nar = []
         this.list.forEach(elem => {
           nar.push({
-            src: this.$CONSTANTS.HOST + elem,
+            src: elem,
             w: window.innerWidth,
             h: window.innerHeight
           })
