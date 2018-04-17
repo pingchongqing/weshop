@@ -74,6 +74,12 @@ const FeedBack = resolve => {
         resolve(require('components/mycenter/FeedBack.vue'));
     }, 'mycenter');
 };
+// 订单详情
+const OrderDetail = resolve => {
+    require.ensure([], () => {
+        resolve(require('components/mycenter/OrderDetail.vue'));
+    }, 'mycenter');
+};
 
 export default {
   path: '/mycenter',
@@ -163,6 +169,13 @@ export default {
       path: 'points',
       components: {
         default: Points
+      }
+    },
+    {
+      name: 'orderdetail',
+      path: 'orderdetail/:orderId',
+      components: {
+        default: OrderDetail
       }
     },
   ]

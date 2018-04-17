@@ -22,14 +22,35 @@
 </template>
 <script>
 import {HomeApi} from 'api'
+import { mapState } from 'vuex'
 export default {
   data() {
     return {
       addressList: [],
       iStart: 1,
       limit: 10,
-      from: {}
+      from: {},
+      isLoding: false
     }
+  },
+  watch: {
+    isLoding (val) {
+      let inTimer
+      if (val) {
+        clearTimeout(inTimer)
+        this.$indicator.open({
+          text: '加载中...',
+          spinnerType: 'fading-circle'
+        })
+      } else {
+        inTimer = setTimeout(this.$indicator.close, 500)
+      }
+    },
+  },
+  computed:{
+    ...mapState({
+      appAddressParam: state => state.checkAddress
+    })
   },
   filters: {
     areaNameFilter(str) {
@@ -45,14 +66,17 @@ export default {
   },
   created() {
     this.getAddressList()
+    document.title = '逛逛-收货地址'
   },
   methods: {
     getAddressList(){
+      this.isLoding = true
       HomeApi.AddressList({
         "iStart": this.iStart,
         "limit": this.limit
       }).then(
         res => {
+          this.isLoding = false
           console.log(res);
           if (res.data.resultCode === 1) {
             this.addressList = res.data.pages.pageList
@@ -64,6 +88,9 @@ export default {
               }
             })
           }
+        },
+        err => {
+          this.isLoding = false
         }
       )
     },
@@ -112,6 +139,10 @@ export default {
               console.log(res);
               if (res.data.resultCode === 1) {
                 this.addressList = this.addressList.filter(a=> a.addressId != addr.addressId)
+                // 如果订单选中的地址被删除
+                if (this.appAddressParam.addressId === addr.addressId) {
+                  this.$store.commit('setCheckAddress', {})
+                }
               } else {
                 this.$toast(res.data.info)
               }

@@ -17,5 +17,8 @@ export default {
   components: {
     footerComponent,
   },
+  created() {
+    document.title = '逛逛-我的优惠券'
+  }
 }
 </script>

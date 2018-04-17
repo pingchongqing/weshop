@@ -10,7 +10,7 @@
   <!-- 收货地址 -->
   <addr :addressData="appAddressParam" v-show="stock === 0"></addr>
   <!-- 最近柜机地址 -->
-  <cabaddress v-show="stock === 1"></cabaddress>
+  <cabaddress v-show="stock === 1" :cabdata="cabAddress"></cabaddress>
   <!-- 商品信息 -->
   <div class="orderinfo mt-20">
     <h3 class="border-bottom">商品信息</h3>
@@ -44,7 +44,7 @@
 </div>
 </template>
 <script>
-import { HomeApi } from 'api/index'
+import { HomeApi, CabApi } from 'api/index'
 import { mapState } from 'vuex'
 import addr from 'components/order/Address'
 import cabaddress from 'components/order/CabAddress'
@@ -53,7 +53,8 @@ export default {
     return {
       orderDetail: {},
       iscab: this.$route.query.iscab,
-      stock: 0
+      stock: 0,
+      cabAddress: []
     }
   },
   components: {
@@ -91,8 +92,23 @@ export default {
   },
   created() {
     this.getOrderDetail()
+    document.title = '逛逛-下单'
+    if (this.iscab == 1) {
+      this.getCabAddress()
+    }
   },
   methods: {
+    getCabAddress() {
+      CabApi.FindRelatedSjg({productId: this.$route.query.productId}).then(
+        res => {
+          console.log(res);
+          let data = JSON.parse(res.data)
+          if (data.code == 200 && data.msg == 'OK') {
+            this.cabAddress = data.data
+          }
+        }
+      )
+    },
     showStock(n) {
       this.stock = n
     },
@@ -111,7 +127,7 @@ export default {
           console.log(res);
           if (res.data.resultCode === 1) {
             this.orderDetail = res.data
-            if (Object.keys(this.appAddressParam).length === 0) {
+            if (!this.appAddressParam.addressId) {
               this.$store.commit('setCheckAddress', this.orderDetail.appAddressParam)
             }
             if (Object.keys(this.checkedInvoice).length === 0) {

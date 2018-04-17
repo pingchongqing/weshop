@@ -6,7 +6,7 @@
           <tr>
             <td class="incheck">
               <div class="input-radio">
-                <div class="forcheckbox" :class="{ed: invoice.id==checkedInvoice.id}" @click.stop="setDefault(invoice)"></div>
+                <div class="forcheckbox" :class="{ed: invoice.id==checkedInvoice.id}" ></div>
                 <input type="checkbox" :ref="'addresscheck'+index"  />
               </div>
             </td>
@@ -28,6 +28,9 @@
       </li>
     </ul>
     <button class="defaultconfirm" @click="newInvoice">添加发票信息</button>
+    <div class="incon" v-show="addinvoiceshow">
+      <add-invoice @invoicesave="getresult" :editid="editid"></add-invoice>
+    </div>
     <footerComponent ></footerComponent>
   </div>
 </template>
@@ -35,17 +38,36 @@
 import {HomeApi} from 'api'
 import {mapState} from 'vuex'
 import footerComponent from '../Footer'
+import AddInvoice from './ModifyInvoice'
 export default {
   data() {
     return {
       invoiceList: [],
       iStart: 1,
       limit: 10,
-      from: {}
+      from: {},
+      addinvoiceshow: false,
+      editid: '',
+      isLoding: false
     }
   },
   components: {
     footerComponent,
+    'add-invoice': AddInvoice
+  },
+  watch: {
+    isLoding (val) {
+      let inTimer
+      if (val) {
+        clearTimeout(inTimer)
+        this.$indicator.open({
+          text: '加载中...',
+          spinnerType: 'fading-circle'
+        })
+      } else {
+        inTimer = setTimeout(this.$indicator.close, 500)
+      }
+    },
   },
   computed: {
     ...mapState({
@@ -76,19 +98,30 @@ export default {
   },
   created() {
     this.getInvoiceList()
+    document.title = '逛逛-发票信息'
   },
   methods: {
+    getresult(val) {
+      if (val) {
+        this.addinvoiceshow = false
+        this.getInvoiceList()
+      }
+    },
     newInvoice() {
-      this.$router.push({
-        name: 'modifyInvoice'
-      })
+      this.editid = ''
+      this.addinvoiceshow = true
+      // this.$router.push({
+      //   name: 'modifyInvoice'
+      // })
     },
     getInvoiceList(){
+      this.isLoding = true
       HomeApi.GetInvoiceList({
         "iStart": this.iStart,
         "limit": this.limit
       }).then(
         res => {
+          this.isLoding = false
           console.log(res);
           if (res.data.resultCode === 1) {
             this.invoiceList = res.data.pages.pageList
@@ -100,16 +133,21 @@ export default {
               }
             })
           }
+        },
+        err => {
+          this.isLoding = false
         }
       )
     },
     modifyInvoice(invoice) {
-      this.$router.push({
-        name: 'modifyInvoice',
-        query: {
-          invoiceId: invoice.id
-        }
-      })
+      this.editid = invoice.id
+      this.addinvoiceshow = true
+      // this.$router.push({
+      //   name: 'modifyInvoice',
+      //   query: {
+      //     invoiceId: invoice.id
+      //   }
+      // })
     },
     setDefault(invoice) {
 
@@ -135,7 +173,7 @@ export default {
             res => {
               console.log(res);
               if (res.data.resultCode === 1) {
-                this.$router.go(0)
+                this.getInvoiceList()
               } else {
                 this.$toast(res.data.info)
               }
@@ -148,6 +186,18 @@ export default {
 }
 </script>
 <style scoped lang="less">
+.incon {
+  z-index:100;
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background: #f7f7f7;
+  overflow-x: hidden;
+  overflow-y: auto;
+  display: block
+}
 .incheck {
   width: 10%;
   padding-left: .3rem;

@@ -46,6 +46,7 @@ export default {
   },
   created() {
     this.getBookmarkList()
+    document.title = '逛逛-我的收藏'
   },
   methods: {
     getBookmarkList() {
@@ -59,7 +60,7 @@ export default {
           this.isLoding = false
           console.log(res);
           if (res.data.resultCode === 1) {
-            this.bookmarkList = res.data.pages.pageList
+            this.bookmarkList = res.data.pages.pageList || []
           } else if (res.data.resultCode === -1 && res.data.info === '未登录') {
             this.$router.push({
               name: 'login',

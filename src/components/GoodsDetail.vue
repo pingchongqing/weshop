@@ -30,7 +30,7 @@
       <NumberInput
         :min=1
         :max="parseInt(detailData.productNum)"
-        :fillable=false
+        :fillable=true
         v-model="eqNum"
         :align="'left'"
         :title="'购买数量'"
@@ -103,8 +103,8 @@
 
     <div class="buybox">
       <div class="bookmark" :class="{ed: isBookMark}" @click="addBookMark"><span>{{isBookMark ? '已' : ''}}收藏</span></div>
-      <button class="car button" @click="addToCart">加入购物车</button>
-      <button class="buy button" @click="buy">立即购买</button>
+      <button class="car button" :class="{dis: detailData.productNum == 0 || !detailData.productId}" @click="addToCart">加入购物车</button>
+      <button class="buy button" :class="{dis: detailData.productNum == 0 || !detailData.productId}" @click="buy">立即购买</button>
     </div>
     <!-- 购物车 -->
     <cart :addnum="cartnum" ref="cart"></cart>
@@ -130,7 +130,8 @@
         isMark: 0,
         cartnum: 0,
         screenHight: this.$getScreenHeight(),
-        classId: this.$route.params.classId
+        classId: this.$route.params.classId,
+        isLoding: false
       }
     },
     components: {
@@ -138,6 +139,24 @@
       NumberInput,
       cart,
       commend
+    },
+    watch: {
+      isLoding (val) {
+        let inTimer
+        if (val) {
+          clearTimeout(inTimer)
+          this.$indicator.open({
+            text: '加载中...',
+            spinnerType: 'fading-circle'
+          })
+        } else {
+          inTimer = setTimeout(this.$indicator.close, 500)
+        }
+      },
+      '$route': 'refresh'
+    },
+    destroyed() {
+      this.$indicator.close()
     },
     computed: {
       imageList() {
@@ -159,7 +178,7 @@
         return this.detailData.attrList || []
       },
       isBookMark() {
-        return this.isMark || this.detailData.isBookMark
+        return this.detailData.isBookMark
       },
       // 商品类别前六位是100122的可以柜机取货
       iscab() {
@@ -171,11 +190,9 @@
         return false
       }
     },
-    watch: {
-      '$route': 'refresh'
-    },
     created() {
       this.refresh()
+      document.title = '逛逛-商品详情'
     },
     filters: {
       freightType(type) {
@@ -221,6 +238,10 @@
       },
       // 添加收藏和取消收藏
       addBookMark() {
+        if (!this.detailData.productId){
+          return false
+        }
+        this.isLoding = true
         let markdata = {
           "linkType": 1,
           "linkUrl": this.detailData.productId ,
@@ -230,6 +251,7 @@
         HomeApi.AddBookMark(markdata).then(
           res => {
             console.log(res);
+            this.isLoding = false
             // 未登录
             if (res.data.resultCode === 3) {
               this.$router.push({
@@ -239,7 +261,8 @@
                 }
               })
             } else if (res.data.resultCode === 1) {
-              this.isMark = parseInt(res.data.linkId)
+              this.detailData.isBookMark===0 ? this.detailData.isBookMark = 1 : this.detailData.isBookMark = 0
+              this.detailData = JSON.parse(JSON.stringify(this.detailData))
               this.$toast(res.data.info)
             } else {
               this.$toast(res.data.info)
@@ -247,6 +270,7 @@
           },
           err => {
             console.log(err);
+            this.isLoding = false
           }
         )
       },
@@ -259,10 +283,19 @@
       },
       // 加入购物车
       addToCart() {
+        if (this.detailData.productNum == 0) {
+          this.$toast('库存不足')
+          return false
+        }
+        if (!this.detailData.productId){
+          return false
+        }
+        this.isLoding = true
         let jsonData = {"stockNum": this.eqNum,"stockId": this.detailData.productId};
         HomeApi.addToCart(jsonData).then(
           res => {
             console.log(res);
+            this.isLoding = false
             if (res.data.resultCode === 1) {
               this.cartnum = this.eqNum
               this.$nextTick(() => {
@@ -282,20 +315,29 @@
           },
           err => {
             console.log(err);
+            this.isLoding = false
           }
         )
       },
       // 立即购买
       buy() {
+        if (this.detailData.productNum == 0) {
+          this.$toast('库存不足')
+          return false
+        }
+        if (!this.detailData.productId){
+          return false
+        }
         HomeApi.QuickBuy({"productNum": this.eqNum, "productId": this.detailData.productId}).then(
           res => {
             console.log(res);
             if (res.data.resultCode === -1) {
-              this.$router.push({name: 'login', query:{returnUrl: this.$route.path}})
+              this.$router.push({name: 'login', query:{returnUrl: location.href}})
             } else if (res.data.resultCode === 1) {
               let postquery = {
                 stockType: 1,
-                cartParam: res.data.tradeId + ',' + res.data.productNum
+                cartParam: res.data.tradeId + ',' + res.data.productNum,
+                productId: this.$route.params.productId
               }
               if (this.iscab) {
                 postquery.iscab = 1
@@ -495,6 +537,12 @@ span.price {
   }
   .buy {
     background-color: #ecc100;
+  }
+  .car.dis {
+    background-color: #ddd !important;
+  }
+  .buy.dis {
+    background-color: #ccc !important;
   }
 }
 </style>

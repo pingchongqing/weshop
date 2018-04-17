@@ -45,6 +45,9 @@ export default {
   components: {
     InputComponent
   },
+  created() {
+    document.title = '逛逛-修改密码'
+  },
   methods: {
     submit() {
       if (!this.oldPassword || !this.newPassword || !this.confirmNewPassword) {

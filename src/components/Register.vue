@@ -35,9 +35,15 @@
           placeholder="请输入短信验证码"></input-component>
       </div>
       <div class="code">
-        <button class="telcode" :class="{act: indentifying && tel}" @click="getTelCode">取验证码</button>
+        <button class="telcode" :class="{act: indentifying && tel}" @click="getTelCode" v-if="!isGetingSMS">
+          取验证码
+        </button>
+        <button class="telcode" v-else>
+          重试(<countdown slot="value" v-model="countTime" @on-trip="onTrip"  @on-finish="onFinish" ></countdown>)
+        </button>
       </div>
     </div>
+
     <div class="cell">
       <input-component
         :title="'设置密码'"
@@ -59,6 +65,7 @@
 </template>
 <script>
 import {InputComponent} from 'components/common/formComponent'
+import countdown from 'components/common/timecountdown'
 import {HomeApi} from 'api'
 export default {
   data() {
@@ -69,16 +76,27 @@ export default {
       telcode: '',
       indentifying: '',
       password: '',
-      repassword: ''
+      repassword: '',
+      countTime: 60,
+      isGetingSMS: false
     }
   },
   components: {
-    InputComponent
+    InputComponent,
+    countdown
   },
   mounted() {
     this.changeCode()
+    document.title = '逛逛-注册'
   },
   methods: {
+    onTrip(val) {
+      this.isGetingSMS = true
+    },
+    onFinish() {
+      this.isGetingSMS = false
+      this.countTime = 60
+    },
     changeCode() {
       this.codepath = '/checkImage?type=login&data=' + Math.random()
     },
@@ -138,7 +156,7 @@ export default {
 				return false;
 			}
 			if(this.password != this.repassword) {
-				mui.toast("两次密码输入不一致");
+				this.toast("两次密码输入不一致");
 				return false;
 			}
 
@@ -187,11 +205,12 @@ export default {
         mui.toast("验证码不能为空");
         return false;
       }
+      this.isGetingSMS = true
       HomeApi.SmsCode({cellphone:this.tel,image:this.indentifying}).then(
         res => {
           console.log(res);
           if (res.data.resultCode === 1) {
-            this.telcode = res.data.code
+            this.$toast('发送验证码成功')
           } else {
             this.$toast(res.data.info)
           }

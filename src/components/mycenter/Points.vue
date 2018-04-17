@@ -10,6 +10,9 @@ import Footer from '../Footer'
 export default {
   components: {
     'footer-component': Footer
+  },
+  created() {
+    document.title = '逛逛-我的积分'
   }
 }
 </script>

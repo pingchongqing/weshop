@@ -33,6 +33,9 @@ export default {
     'textarea-component':TextareaComponent,
     InputComponent
   },
+  created() {
+    document.title = '逛逛-意见反馈'
+  },
   methods: {
     feedback() {
       if (!this.content) {

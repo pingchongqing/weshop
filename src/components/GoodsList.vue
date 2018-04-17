@@ -46,7 +46,7 @@
           infinite-scroll-disabled="loading"
           infinite-scroll-distance="10">
           <li class="listware bg-fff border-bottom mb-20" v-for="item in goodsList" :key="item.productId" >
-            <router-link :to="{ name: 'goodsDetail', params: {classId: item.classId, productId: item.productId} }">
+            <router-link :to="{ name: 'goodsDetail', params: {classId: item.classId, productId: item.productId}, query:{saleCustId: item.custId} }">
               <div class="mbgmes-img fl">
                 <div class="img-center">
                   <img :src="item.filePath || defaultImgPath" :onError="nofind">
@@ -140,7 +140,7 @@ export default {
     }
   },
   created() {
-    // this.getGoodsList()
+    document.title = '逛逛-商品列表'
   },
   methods: {
     // 获取精品推荐商品

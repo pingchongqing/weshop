@@ -2,7 +2,7 @@
 <div>
   <li v-for="item in listData">
     <div class="sellerName">{{item.saleCustName}}<span class="fr default-color mr-20">{{item.statusName}}</span></div>
-    <div class="prolist clearfix" v-for="pro in item.appProductList">
+    <div class="prolist clearfix" v-for="pro in item.appProductList" @click="goOrder(item)">
       <div class="imgbox">
         <img :src="pro.filePath" v-if="pro.filePath" />
         <img src="~images/defaultbox.png" v-else />
@@ -134,6 +134,15 @@ export default {
     getgoods(order) {
       this.popupVisible = !this.popupVisible
       this.qrcodeOption.text = order.ladingCode
+    },
+    //
+    goOrder(item) {
+      this.$router.push({
+        name: 'orderdetail',
+        params: {
+          orderId: item.orderId
+        }
+      })
     }
   }
 }

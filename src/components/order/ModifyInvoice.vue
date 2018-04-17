@@ -92,9 +92,25 @@ export default {
     'input-component':InputComponent,
     'mt-radio':Radio
   },
+  props: ['editid'],
+  watch: {
+    editid(val) {
+      if (val) {
+        this.getInvoiceData(val)
+      } else {
+        this.invoiceType = '2'
+        this.taxpayerNo = ''
+        this.registAddress = ''
+        this.registTel = ''
+        this.openBank = ''
+        this.bankAccount = ''
+        this.invoiceTitle = ''
+      }
+    }
+  },
   created() {
-    if(this.$route.query.invoiceId) {
-      this.getInvoiceData(this.$route.query.invoiceId)
+    if(this.editid) {
+      this.getInvoiceData(this.editid)
     }
   },
   methods: {
@@ -120,17 +136,18 @@ export default {
         }
       }
       let fun = 'Addinvoice'
-      if (this.$route.query.invoiceId) {
+      if (this.editid) {
         fun = 'UpdateInvoice'
-        params.id = this.$route.query.invoiceId
+        params.id = this.editid
       }
       HomeApi[fun](params).then(
         res => {
           console.log(res);
           if (res.data.resultCode === 1) {
-            this.$router.push({
-              name: 'invoiceList'
-            })
+            // this.$router.push({
+            //   name: 'invoiceList'
+            // })
+            this.$emit('invoicesave', true)
           }
         }
       )

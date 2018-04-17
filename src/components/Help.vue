@@ -19,6 +19,9 @@ export default {
   components: {
     'mt-cell':Cell,
     'footer-component': Footer
+  },
+  created() {
+    document.title = '逛逛-帮助中心'
   }
 }
 </script>

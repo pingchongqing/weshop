@@ -4,7 +4,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     checkAddress: {},
-    checkedInvoice: {}
+    checkedInvoice: {},
+    checkedCabAddress:{}
   },
   mutations: {
     setCheckAddress (state, addr) {
@@ -13,6 +14,9 @@ export default new Vuex.Store({
     },
     setcheckInvoice (state, invoice) {
       state.checkedInvoice = invoice
+    },
+    setcheckCabAddress (state, addr) {
+      state.checkedCabAddress = addr
     },
   },
   strict: process.env.NODE_ENV !== 'production',

@@ -1,8 +1,12 @@
 <template>
   <div id="wrapper" :style="{minHeight: screenHight + 'px'}">
     <div class="mobilegames-conn">
+      <div class="cabinfo">
+        <p>柜机编号：{{cabinetId}}</p>
+        <p>柜机地址：{{cabAddress}}</p>
+      </div>
       <div class="mbilegames-list mt-20">
-        <div class="empty" v-show="goodsList.length===0 && isLoadAll"><span>空的~</span></div>
+        <div class="empty" v-show="goodsList.length===0 && isLoadAll"><span>柜机暂无上架商品~</span></div>
         <transition-group tag="ul" name="flip-list">
           <li class="listware bg-fff border-bottom mb-20" v-for="item in goodsList" :key="item.productNo" @click="nextPage(item)">
             <div class="mbgmes-img fl">
@@ -38,7 +42,9 @@ export default {
       isLoadAll: false,
       nofind: 'this.src="' + require('../../assets/images/defaultbox.png') + '"',
       defaultImgPath: require('../../assets/images/defaultbox.png'),
-      screenHight: this.$getScreenHeight()
+      screenHight: this.$getScreenHeight(),
+      cabAddress: this.$route.query.cabAddress||'无法获得柜机地址',
+      cabinetId: this.$route.params.cabinetId
     }
   },
   components: {
@@ -62,6 +68,7 @@ export default {
   },
   created() {
     this.getGoodsList()
+    document.title = '逛逛-柜机商品'
   },
   methods: {
     // 获取精品推荐商品
@@ -120,6 +127,16 @@ export default {
 }
 </script>
 <style scoped>
+.cabinfo{
+  border: #ccc 1px dashed;
+  background: #ff2c55;
+  padding: .2rem;
+}
+.cabinfo p {
+  color: #fff;
+  font-size: .3rem;
+  line-height: 150%;
+}
 .listware {
     padding: 15px;
 }

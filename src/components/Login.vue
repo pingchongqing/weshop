@@ -1,47 +1,45 @@
 <template>
-  <transition enter-active-class="fadeInRight animated" leave-active-class="fadeOutLeft animated">
-    <div class="login" :style="{minHeight: screenHight + 'px'}">
-      <div class="logo">
-        <img src="~images/logo.png" />
-      </div>
-      <div class="formbox">
-        <div class="inputbox">
-          <div class="icon user"></div>
-          <div class="inputname">
-            <input-component
-              :iclass="'top-input'"
-              v-model="user"
-              placeholder="请输入用户名"></input-component>
-          </div>
-        </div>
-        <div class="inputbox">
-          <div class="icon password"></div>
-          <div class="inputname">
-            <input-component
-              :iclass="'top-input'"
-              :type="'password'"
-              v-model="password"
-              placeholder="请输入密码"></input-component>
-          </div>
-        </div>
-        <div class="inputbox">
-          <div class="icon indentifying"></div>
-          <div class="inputname">
-            <input-component
-              :iclass="'top-input'"
-              :type="'number'"
-              v-model="indentifying"
-              placeholder="请输入验证码"></input-component>
-          </div>
-          <div class="code">
-            <img :src="codepath" @click="changeCode" />
-          </div>
-        </div>
-        <button class="loginbtn" @click="login">立即登录</button>
-        <button class="registerbtn" @click="register">注册</button>
-      </div>
+  <div class="login" :style="{minHeight: screenHight + 'px'}">
+    <div class="logo">
+      <img src="~images/logo.png" />
     </div>
-  </transition>
+    <div class="formbox">
+      <div class="inputbox">
+        <div class="icon user"></div>
+        <div class="inputname">
+          <input-component
+            :iclass="'top-input'"
+            v-model="user"
+            placeholder="请输入用户名"></input-component>
+        </div>
+      </div>
+      <div class="inputbox">
+        <div class="icon password"></div>
+        <div class="inputname">
+          <input-component
+            :iclass="'top-input'"
+            :type="'password'"
+            v-model="password"
+            placeholder="请输入密码"></input-component>
+        </div>
+      </div>
+      <div class="inputbox">
+        <div class="icon indentifying"></div>
+        <div class="inputname">
+          <input-component
+            :iclass="'top-input'"
+            :type="'number'"
+            v-model="indentifying"
+            placeholder="请输入验证码"></input-component>
+        </div>
+        <div class="code">
+          <img :src="codepath" @click="changeCode" />
+        </div>
+      </div>
+      <button class="loginbtn" @click="login">立即登录</button>
+      <button class="registerbtn" @click="register">注册</button>
+    </div>
+  </div>
 </template>
 <script>
 import {InputComponent} from 'components/common/formComponent'
@@ -63,6 +61,7 @@ export default {
   mounted() {
     this.$indicator.close()
     this.changeCode()
+    document.title = '逛逛-登录'
   },
   methods: {
     // 改变验证码

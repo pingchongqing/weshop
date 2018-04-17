@@ -82,6 +82,7 @@ export default {
     this.getBannerList()
     this.getProducts()
     this.getWeixinUser()
+    this.$indicator.close()
   },
   methods: {
     //获取用户信息
@@ -91,9 +92,9 @@ export default {
           res => {
             this.psdata = JSON.stringify(res.data)
             console.log(res);
-            if (res.data.code === 'fail') {
-              this.$toast(res.data.message)
-            }
+            // if (res.data.code === 'fail') {
+            //   this.$toast(res.data.message)
+            // }
           },
           err => {
             console.log(err);
@@ -130,6 +131,9 @@ export default {
         },
         err => {
           console.log(err);
+          this.$messagebox({
+            message: '服务器开小差了,请稍后访问'
+          })
         }
       )
     },
@@ -170,7 +174,7 @@ export default {
 .swiper-container {
   width: 100%;
   background: #000;
-  min-height: 2.92rem;
+  height: 212px;
 }
 .swiper-pagination-bullet {
   opacity: .45;
@@ -184,7 +188,7 @@ export default {
 .newhmban .swiper-container .swiper-pagination{ margin-right:0;  width:100%; background:none; right:auto;opacity:1;  left:auto; border-radius:100%;  line-height:0rem;  bottom: .2rem; }
 .newhmban .swiper-wrapper{ width: 100%; height: auto; line-height:normal;  }
 /*首页banner*/
-.index-banner{ height:auto; display:block; overflow:hidden; position:relative;}
+.index-banner{ height:212px; display:block; overflow:hidden; position:relative;}
 .index-banner .banner-img{ height:2.92rem; width:100%;}
 .index-banner .banner-img .demo{height:2.92rem; display:block; overflow:hidden;}
 .index-banner .banner-img .demo img{ height:100%;}
@@ -281,6 +285,7 @@ export default {
 .recommend li p.protitle {
   color: #353535;
   padding-bottom: 0;
+  height: 1rem;
 }
 .recommend li span.money {
   color: #ff2c55;

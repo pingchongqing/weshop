@@ -14,7 +14,7 @@ export default {
   data() {
     return {
       orderId: this.$route.query.orderId,
-      paymentAmount: this.$route.query.paymentAmount,
+      paymentAmount: parseFloat(this.$route.query.paymentAmount),
       alldeliveryFee: this.$route.query.alldeliveryFee,
       isLoding: false,
     }
@@ -35,6 +35,7 @@ export default {
   },
   mounted() {
     this.getWxConfig()
+    document.title = '逛逛-支付'
   },
   methods: {
     pay() {

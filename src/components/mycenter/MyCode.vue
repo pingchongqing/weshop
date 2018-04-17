@@ -53,7 +53,7 @@ export default {
     },
   },
   created() {
-    // this.getOrderData()
+    document.title = '逛逛-我的取货码'
   },
   methods: {
     // 获取订单列表数据

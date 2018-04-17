@@ -5,6 +5,7 @@
         <input-component
           :iclass="'top-input'"
           v-model="searchText"
+          @pclear="inputclear"
           placeholder="请输入柜机号"></input-component>
         <div class="searchbox"></div>
         <div class="searchicon"></div>
@@ -28,8 +29,8 @@
       </ul>
     </div>
     <div class="listcont">
-      <h3 class="px-30">附近柜机</h3>
-      <ul class="clearfix">
+      <h3 class="px-30">{{titleText}}</h3>
+      <ul class="clearfix" v-if="cabList.length">
         <li v-for="cab in cabList" class="clearfix border-bottom" @click="nextPage(cab)">
           <div class="imgbox">
             <img src="~images/Icon/cab.png" />
@@ -41,6 +42,9 @@
           <div class="recive">{{cab.address}}</div>
         </li>
       </ul>
+      <div class="empty" v-if="cabList.length === 0 && !isLoding">
+        <span>未查询到相关柜机</span>
+      </div>
     </div>
     <footerComponent :active="'near'"></footerComponent>
   </div>
@@ -54,7 +58,10 @@ export default {
     return {
       searchText: '',
       cabList: [],
-      position: this.$getPosition()
+      position: this.$getPosition(),
+      isLoding: false,
+      bakCabList: [],
+      titleText: '附近柜机'
     }
   },
   components: {
@@ -71,12 +78,27 @@ export default {
       return []
     }
   },
+  watch: {
+    isLoding (val) {
+      let inTimer
+      if (val) {
+        clearTimeout(inTimer)
+        this.$indicator.open({
+          text: '加载中...',
+          spinnerType: 'fading-circle'
+        })
+      } else {
+        inTimer = setTimeout(this.$indicator.close, 500)
+      }
+    },
+  },
   created() {
     CabApi.GetCabList({method:'cabinet.queryStores', data:{cabinetId: '', lat: this.position.lat, lng: this.position.lng}}).then(
       res => {
         console.log(res);
         if (res.data.code === '200' && res.data.data.length) {
           this.cabList = res.data.data
+          this.bakCabList = res.data.data
         } else {
           this.$toast('获取柜机数据失败')
         }
@@ -85,10 +107,31 @@ export default {
         console.log(err);
       }
     )
+    document.title = '逛逛-附近柜机'
   },
   methods: {
+    inputclear() {
+      this.cabList = this.bakCabList
+      this.titleText = '附近柜机'
+    },
     doSearch() {
-
+      this.cabList = []
+      this.titleText = '查询结果'
+      this.isLoding = true
+      CabApi.FindSjg({cabinetId: this.searchText}).then(
+        res => {
+          this.isLoding = false
+          let data = JSON.parse(res.data)
+          if (data.code == 200 && data.data.length) {
+            this.cabList = data.data
+          } else if (data.code == 406) {
+            this.$toast('查询频率太快了哦~')
+          }
+        },
+        err => {
+          this.isLoding = false
+        }
+      )
     },
     nextPage(cab) {
       this.$router.push(
@@ -96,6 +139,9 @@ export default {
           name: 'cabproducts',
           params: {
             cabinetId: cab.storeNo
+          },
+          query: {
+            cabAddress: cab.address
           }
         }
       )

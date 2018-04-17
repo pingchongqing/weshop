@@ -17,6 +17,7 @@
         v-model="tel"
         @BackValid="telbackValid"
         :isType = "'china-mobile'"
+        type="tel"
         required
         placeholder="请输入手机号"></input-component>
     </div>
@@ -27,6 +28,7 @@
         v-model="zipCode"
         @BackValid="zipbackValid"
         :isType = "'zip-code'"
+        type="tel"
         required
         placeholder="请输入邮政编码"></input-component>
     </div>
@@ -111,6 +113,7 @@ export default {
       myAddressProvince:'省',
       myAddressCity:'市',
       myAddresscounty:'区/县',
+      isLoding: false
     }
   },
   components: {
@@ -204,8 +207,11 @@ export default {
             return
           }
         }
+      } else if (this.isLoding) {
+        return
       }
       // 有则修改 无则新增
+      this.isLoding = true
       if (this.$route.query.addressId) {
         HomeApi.UpdateAddress({
           "isDefault": this.isDefault,
@@ -217,6 +223,7 @@ export default {
           "addressId":this.$route.query.addressId
         }).then(
           res => {
+            this.isLoding = false
             console.log(res);
             if (res.data.resultCode === 1) {
               this.$toast('修改地址成功')
@@ -233,6 +240,7 @@ export default {
           },
           err => {
             console.log(err);
+            this.isLoding = false
           }
         )
       } else {
@@ -245,6 +253,7 @@ export default {
           "zipCode": this.zipCode
         }).then(
           res => {
+            this.isLoding = false
             console.log(res);
             if (res.data.resultCode === 0) {
               this.$router.push({
@@ -259,6 +268,7 @@ export default {
             }
           },
           err => {
+            this.isLoding = false
             console.log(err);
           }
         )

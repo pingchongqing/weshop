@@ -130,7 +130,7 @@ export default {
     }
   },
   created() {
-    // this.getOrderData()
+    document.title = '逛逛-我的订单'
   },
   methods: {
     handleTopChange(val) {

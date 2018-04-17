@@ -37,7 +37,7 @@ export default {
     InputComponent
   },
   created() {
-
+    document.title = '逛逛-搜索'
   },
   methods: {
     doSearch() {

@@ -31,7 +31,8 @@
       </li>
     </ul>
   </div>
-  <div class="empty" v-show="showList.length===0"><span>空的~</span></div>
+  <div class="empty" v-show="showList.length===0 && logstatus"><span>购物车空空如也~</span></div>
+  <div class="p-30" v-show="!logstatus && !isLoding"><button class="defaultconfirm" @click="gologin">去登录</button></div>
   <!-- 精品推荐开始 -->
   <div id="link4">
     <commend></commend>
@@ -58,7 +59,9 @@ export default {
   data() {
     return {
       cartList: [],
-      screenHight: this.$getScreenHeight()
+      screenHight: this.$getScreenHeight(),
+      logstatus: false,
+      isLoding: false
     }
   },
   components: {
@@ -126,8 +129,17 @@ export default {
   },
   created() {
     this.getCartList()
+    document.title = '逛逛-购物车'
   },
   methods: {
+    gologin() {
+      this.$router.push({
+        name: 'login',
+        query: {
+          returnUrl: this.$route.path
+        }
+      })
+    },
     getImgPath(path) {
       if (!path) {
         return require('../assets/images/default.png')
@@ -135,22 +147,41 @@ export default {
       return path
     },
     getCartList() {
+      this.isLoding = true
       HomeApi.CarList().then(
         res => {
           console.log(res);
+          this.isLoding = false
           if (res.data.resultCode === 1) {
+            this.logstatus = true
             this.cartList = res.data.appShoppingCartList
-          } else if (res.data.resultCode === 3) {
-            this.$router.push({
-              name: 'login',
-              query: {
-                returnUrl: this.$route.path
+          } else if (res.data.resultCode === 3 && res.data.info === '未登录') {
+            this.$messagebox({
+              title:'提示',
+              message: '当前页面需要登录!',
+              showCancelButton: true,
+              cancelButtonText: '返回',
+              confirmButtonText: '去登录'
+            }).then(action => {
+              if (action === 'confirm') {
+                this.$router.push({
+                  name: 'login',
+                  query: {
+                    returnUrl: this.$route.path
+                  }
+                })
+              } else if (action === 'cancel') {
+                this.$router.back()
               }
             })
+          } else {
+            this.logstatus = true
+            this.cartList = []
           }
         },
         err => {
           console.log(err);
+          this.isLoding = false
         }
       )
     },
@@ -166,10 +197,16 @@ export default {
     },
     allcheck() {
       let target = this.$refs['maincheckall']
+      if (this.allchecked) {
+        this.cartList.map(item => {
+          item.checked = false
+        })
+      } else {
+        this.cartList.map(item => {
+          item.checked = true
+        })
+      }
       target.checked = !target.checked
-      this.cartList.map(item => {
-        item.checked = true
-      })
       this.cartList = JSON.parse(JSON.stringify(this.cartList))
     },
     subcheckClick(index, subindex, id) {

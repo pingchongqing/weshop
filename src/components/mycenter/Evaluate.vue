@@ -101,6 +101,7 @@ export default {
   },
   created() {
     this.getOrderData()
+    document.title = '逛逛-商品评价'
   },
   methods: {
     evaluateScroe(val, index) {

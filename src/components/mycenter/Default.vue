@@ -88,19 +88,36 @@ export default {
   created() {
     this.getUserInfo()
     this.getOrderNum()
+    document.title = '逛逛-个人中心'
   },
   methods: {
     getOrderNum() {
       HomeApi.GetOrderNum().then(
         res => {
           console.log(res);
-          if (res.data.resultCode === -1) {
-            this.$router.push({
-              name: 'login',
-              query: {
-                returnUrl: this.$route.path
+          if (res.data.resultCode === -1 && res.data.info === '未登录') {
+            this.$messagebox({
+              title:'提示',
+              message: '当前页面需要登录!',
+              showCancelButton: true,
+              cancelButtonText: '返回首页',
+              confirmButtonText: '去登录',
+              closeOnClickModal: false
+            }).then(action => {
+              if (action === 'confirm') {
+                this.$router.push({
+                  name: 'login',
+                  query: {
+                    returnUrl: this.$route.path
+                  }
+                })
+              } else if (action === 'cancel') {
+                this.$router.push({
+                  name: 'Index',
+                })
               }
             })
+
           } else if (parseInt(res.data.resultCode) === 1) {
             this.orderNum = res.data.orderNumViewVo
           }
@@ -117,8 +134,6 @@ export default {
           if (parseInt(res.data.resultCode) === 1) {
             this.userinfo = res.data.userInfoViewVo
             this.userinfo.filePath = res.data.filePath
-          } else {
-            this.$toast(res.data.info)
           }
         },
         err => {

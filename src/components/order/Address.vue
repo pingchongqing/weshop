@@ -1,6 +1,6 @@
 <template>
 <div>
-  <div class="addr px-30" v-if=" addressData.flag==1 " @click="nextPage">
+  <div class="addr px-30" v-if=" addressData.addressId " @click="nextPage">
     <div class="addrpeople f30">
       <span>收货人：{{addressData.consignee}}</span>
       <span class="pl-30">{{addressData.phone}}</span>

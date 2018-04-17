@@ -325,6 +325,18 @@ const HomeApi = {
       }
     })
   },
+  // 退出登录
+  LogOut: function LogOut(params) {
+    return vm.$http({
+      url: vm.$CONSTANTS.APIWechat + '/loginmgr/signout',
+      method: 'post',
+      data: params,
+      transformRequest: [TransFnc],
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    })
+  },
 }
 
 const CabApi = {
@@ -346,6 +358,22 @@ const CabApi = {
   GetProducts: function GetProducts(params={}) {
     return vm.$http({
       url: vm.$CONSTANTS.APIWechat + '/member/cabinet/getProduct ',
+      method: 'post',
+      data: params,
+    })
+  },
+  //找出目前要买的这个同一商户下的附近其他柜机
+  FindRelatedSjg: function FindRelatedSjg(params={}) {
+    return vm.$http({
+      url: vm.$CONSTANTS.APIWechat + '/member/cabinet/findRelatedSjg',
+      method: 'post',
+      data: params,
+    })
+  },
+  // 柜机编号查询 {cabinetId:**}
+  FindSjg: function FindSjg(params={}) {
+    return vm.$http({
+      url: vm.$CONSTANTS.APIWechat + '/member/cabinet/findSjg',
       method: 'post',
       data: params,
     })
