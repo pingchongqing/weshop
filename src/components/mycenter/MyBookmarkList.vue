@@ -44,6 +44,9 @@ export default {
       }
     },
   },
+  destroyed() {
+    this.$indicator.close()
+  },
   created() {
     this.getBookmarkList()
     document.title = '逛逛-我的收藏'

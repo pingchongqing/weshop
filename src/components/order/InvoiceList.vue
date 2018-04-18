@@ -96,6 +96,9 @@ export default {
       vm.from = from
     })
   },
+  destroyed() {
+    this.$indicator.close()
+  },
   created() {
     this.getInvoiceList()
     document.title = '逛逛-发票信息'

@@ -33,6 +33,9 @@ export default {
       }
     },
   },
+  destroyed() {
+    this.$indicator.close()
+  },
   mounted() {
     this.getWxConfig()
     document.title = '逛逛-支付'

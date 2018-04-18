@@ -66,6 +66,9 @@ export default {
       }
     },
   },
+  destroyed() {
+    this.$indicator.close()
+  },
   created() {
     this.getGoodsList()
     document.title = '逛逛-柜机商品'

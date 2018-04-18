@@ -92,6 +92,9 @@ export default {
       }
     },
   },
+  destroyed() {
+    this.$indicator.close()
+  },
   created() {
     CabApi.GetCabList({method:'cabinet.queryStores', data:{cabinetId: '', lat: this.position.lat, lng: this.position.lng}}).then(
       res => {

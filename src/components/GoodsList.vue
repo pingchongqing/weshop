@@ -139,6 +139,9 @@ export default {
       return this.searchText || this.$route.query.productName
     }
   },
+  destroyed() {
+    this.$indicator.close()
+  },
   created() {
     document.title = '逛逛-商品列表'
   },

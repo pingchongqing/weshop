@@ -64,6 +64,9 @@ export default {
       vm.from = from
     })
   },
+  destroyed() {
+    this.$indicator.close()
+  },
   created() {
     this.getAddressList()
     document.title = '逛逛-收货地址'

@@ -83,7 +83,7 @@ export default {
       return this.orderDetail.cartListSon
     },
     totalamount() {
-      return parseInt(this.orderDetail.totalPrice*100)/100 - parseInt(this.orderDetail.totalDeliveryFee*100)/100
+      return parseInt(this.orderDetail.totalPrice*100)/100 - parseInt(this.orderDetail.totalDeliveryFee*100)/100 || '0'
     },
     ...mapState({
       appAddressParam: state => state.checkAddress,

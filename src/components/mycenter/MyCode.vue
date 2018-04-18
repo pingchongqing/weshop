@@ -52,6 +52,9 @@ export default {
       }
     },
   },
+  destroyed() {
+    this.$indicator.close()
+  },
   created() {
     document.title = '逛逛-我的取货码'
   },

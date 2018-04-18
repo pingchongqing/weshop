@@ -119,14 +119,27 @@ export default {
         showCancelButton: true
       }).then( action => {
         if (action === 'confirm') {
-          HomeApi.CanleOrders({orderId: order.orderId}).then(
-            res => {
-              console.log(res);
-              if (res.data.resultCode === 1) {
-                this.$router.go(0)
+          if (order.orderStatus == 51 ) {
+            HomeApi.PayRefund({orderId: order.orderId}).then(
+              res => {
+                console.log(res);
+                if (res.data.code === 'success') {
+                  this.$router.go(0)
+                } else {
+                  this.$toast(res.data.message)
+                }
               }
-            }
-          )
+            )
+          } else {
+            HomeApi.CanleOrders({orderId: order.orderId}).then(
+              res => {
+                console.log(res);
+                if (res.data.resultCode === 1) {
+                  this.$router.go(0)
+                }
+              }
+            )
+          }
         }
       })
     },

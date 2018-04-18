@@ -337,6 +337,10 @@ const HomeApi = {
       }
     })
   },
+  // 退款
+  PayRefund: function PayRefund(params) {
+    return vm.$http.get(vm.$CONSTANTS.APIWeixin + '/payRefund', {params})
+  }
 }
 
 const CabApi = {
@@ -357,7 +361,7 @@ const CabApi = {
   },
   GetProducts: function GetProducts(params={}) {
     return vm.$http({
-      url: vm.$CONSTANTS.APIWechat + '/member/cabinet/getProduct ',
+      url: vm.$CONSTANTS.APIWechat + '/member/cabinet/getProduct',
       method: 'post',
       data: params,
     })

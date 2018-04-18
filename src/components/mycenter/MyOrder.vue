@@ -129,6 +129,9 @@ export default {
       return dataContainer
     }
   },
+  destroyed() {
+    this.$indicator.close()
+  },
   created() {
     document.title = '逛逛-我的订单'
   },
