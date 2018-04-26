@@ -80,6 +80,12 @@ const OrderDetail = resolve => {
         resolve(require('components/mycenter/OrderDetail.vue'));
     }, 'mycenter');
 };
+// 订单详情
+const ReturnList = resolve => {
+    require.ensure([], () => {
+        resolve(require('components/mycenter/ReturnList.vue'));
+    }, 'mycenter');
+};
 
 export default {
   path: '/mycenter',
@@ -176,6 +182,13 @@ export default {
       path: 'orderdetail/:orderId',
       components: {
         default: OrderDetail
+      }
+    },
+    {
+      name: 'returnList',
+      path: 'returnList',
+      components: {
+        default: ReturnList
       }
     },
   ]

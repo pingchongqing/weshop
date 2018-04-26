@@ -25,6 +25,7 @@
               <div class="tool sub" @click="modifyNum('sub',index, subindex, item)"></div>
               <input type="number" class="border-bottom color-666 f32" :value="item.stockNum"  />
               <div class="tool add" @click="modifyNum('add', index, subindex, item)"></div>
+              <div class="tool del" @click="modifyNum('del', index, subindex, item)"></div>
             </div>
           </div>
         </div>
@@ -67,6 +68,20 @@ export default {
   components: {
     footerComponent,
     commend
+  },
+  watch: {
+    isLoding (val) {
+      let inTimer
+      if (val) {
+        clearTimeout(inTimer)
+        this.$indicator.open({
+          text: '加载中...',
+          spinnerType: 'fading-circle'
+        })
+      } else {
+        inTimer = setTimeout(this.$indicator.close, 500)
+      }
+    },
   },
   computed: {
     // 处理列表数据，将相同卖家数据合并
@@ -130,6 +145,9 @@ export default {
   created() {
     this.getCartList()
     document.title = '逛逛-购物车'
+  },
+  destroyed() {
+    this.$indicator.close()
   },
   methods: {
     gologin() {
@@ -220,23 +238,24 @@ export default {
       this.cartList = JSON.parse(JSON.stringify(this.cartList))
     },
     modifyNum(type, index, subindex, item) {
+      this.isLoding = true
       let num = item.stockNum
       if (type === 'add') {
         num++
       } else if (type === 'sub') {
         num--
       }
-      if (num === 0) {
+      if (num === 0 || type === 'del') {
         this.$messagebox({
           title: '提示',
           message: '确定从购物车删除吗？',
           showCancelButton: true
         }).then(
-          action => {
+          async action => {
             if (action === 'confirm') {
-              this.removeProduct(item.tradeId)
+              await this.removeProduct(item.tradeId)
+              this.isLoding = false
             }
-            console.log(action);
           }
         )
       } else if (num > item.productNum) {
@@ -253,9 +272,11 @@ export default {
               })
               this.cartList = JSON.parse(JSON.stringify(this.cartList))
             }
+            this.isLoding = false
           },
           err => {
             console.log(err);
+            this.isLoding = false
           }
         )
       }
@@ -313,7 +334,7 @@ export default {
 .balance {
     height: 1rem;
     position: fixed;
-    bottom: 1.2rem;
+    bottom: .96rem;
     width: 100%;
     background: #fff;
     font-size: .32rem;
@@ -383,7 +404,7 @@ export default {
             margin-top: .3rem;
             float: right;
             input {
-              width: 1rem;
+              width: .8rem;
               float: left;
               border-width: 1px;
               border-top: none;
@@ -417,6 +438,11 @@ export default {
               background: url('~images/ch_add_hov.png') no-repeat center;
               background-size: .3rem;
               border: #ccc 1px solid;
+            }
+            .del {
+              background: url('~images/del.png') no-repeat center;
+              background-size: .45rem;
+              margin-left: .1rem;
             }
           }
         }

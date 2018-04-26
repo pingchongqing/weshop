@@ -1,7 +1,7 @@
 <template>
   <div id="wrapper">
     <div style="height:2rem;background:#fff;"></div>
-    <div class="amount">￥{{paymentAmount}}</div>
+    <div class="amount">￥{{amount}}</div>
     <div class="delivery px-30">运费：{{alldeliveryFee}}</div>
     <p class="orderid px-30">订单号：{{orderId}}</p>
     <div class="paybutton" @click="pay">立即支付</div>
@@ -32,6 +32,11 @@ export default {
         inTimer = setTimeout(this.$indicator.close, 500)
       }
     },
+  },
+  computed: {
+    amount() {
+      return Math.ceil(this.paymentAmount * 1000)/1000
+    }
   },
   destroyed() {
     this.$indicator.close()

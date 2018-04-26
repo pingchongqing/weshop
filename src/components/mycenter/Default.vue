@@ -29,7 +29,7 @@
         <li @click="nextPage(3)"><i class="l3"></i><div>待发货</div><div class="badge" v-show="orderNum.waitingDelivery">{{orderNum.waitingDelivery}}</div></li>
         <li @click="nextPage(5)"><i class="l4"></i><div>待评价</div><div class="badge" v-show="orderNum.waitingEvaluated">{{orderNum.waitingEvaluated}}</div></li>
         <li @click="nextPage(4)"><i class="l5"></i><div>待收货</div><div class="badge" v-show="orderNum.alreadyDelivery">{{orderNum.alreadyDelivery}}</div></li>
-        <li @click="nextPage(1)"><i class="l6"></i><div>退换货</div><div class="badge" v-show="orderNum.returnNum">{{orderNum.returnNum}}</div></li>
+        <li @click="returnListPage"><i class="l6"></i><div>退换货</div><div class="badge" v-show="orderNum.returnNum">{{orderNum.returnNum}}</div></li>
       </ul>
     </div>
     <!-- 我的服务 -->
@@ -154,6 +154,18 @@ export default {
           type: n
         }
       })
+    },
+    returnListPage() {
+      if (this.userinfo.custId) {
+        this.$router.push({
+          name: 'returnList',
+          query: {
+            buyerCustId: this.userinfo.custId
+          }
+        })
+      } else {
+        this.$toast('退换货列表加载失败')
+      }
     }
   }
 }

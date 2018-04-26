@@ -108,15 +108,16 @@ const HomeApi = {
   },
   // 获取微信用户信息
   GetWeixinUser: function GetWeixinUser(params) {
-    return vm.$http({
-      url: vm.$CONSTANTS.APIWeixin + '/approve',
-      method: 'post',
-      data: params,
-      transformRequest: [TransFnc],
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }}
-    )
+    return vm.$http.post(vm.$CONSTANTS.APIWeixin + '/approve', params)
+    // return vm.$http({
+    //   url: vm.$CONSTANTS.APIWeixin + '/approve',
+    //   method: 'post',
+    //   data: params,
+    //   transformRequest: [TransFnc],
+    //   headers: {
+    //     'Content-Type': 'application/x-www-form-urlencoded'
+    //   }}
+    // )
   },
   // 微信支付成功调用接口
   OrderPaySuccess: function OrderPaySuccess(params) {
@@ -164,6 +165,10 @@ const HomeApi = {
   // 查询订单列表
   GetOrderList: function GetOrderList(params={}) {
     return vm.$http.get(vm.$CONSTANTS.APIWechat + '/member/ordermgr/orderlist', {params})
+  },
+  // 查询退换货列表
+  GetReturnOrderList: function GetReturnOrderList(params={}) {
+    return vm.$http.get(vm.$CONSTANTS.APIWechat + '/member/returnlist/returnlist', {params})
   },
   // 新增收货地址
   AddAdress: function AddAdress(params={}) {

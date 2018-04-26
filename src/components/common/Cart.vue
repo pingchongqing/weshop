@@ -1,7 +1,7 @@
 <template>
   <transition name="fed" appear enter-active-class="animated fadeIn"
     leave-active-class="animated fadeOut">
-    <div id="cart" v-show="cartnum" @click="nextPage"><div class="badge">{{cartnum}}</div></div>
+    <div id="cart" v-show="cartnum" @click="nextPage"><div class="badge">{{cartnumShow}}</div></div>
   </transition>
 </template>
 <script>
@@ -15,6 +15,11 @@ export default {
   props: {
     addnum: {
       type: Number
+    }
+  },
+  computed: {
+    cartnumShow() {
+      return this.cartnum > 99 ? '···' : this.cartnum
     }
   },
   created() {
